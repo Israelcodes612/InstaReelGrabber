@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ GrabInstagram - Download Instagram Content</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #faf5ff 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header Styles */
+        .header {
+            width: 100%;
+            padding: 2rem 0;
+            background: linear-gradient(90deg, #9333ea 0%, #ec4899 50%, #f97316 100%);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.125rem;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .main-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .main-title h2 {
+            font-size: 1.875rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, #9333ea, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.75rem;
+        }
+
+        .main-title p {
+            font-size: 1.25rem;
+            color: #6b7280;
+            max-width: 42rem;
+            margin: 0 auto;
+        }
+
+        /* Card Styles */
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2rem;
+            border: none;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Checkbox */
+        .bulk-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .checkbox {
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #c084fc;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .checkbox.checked {
+            background-color: #9333ea;
+            border-color: #9333ea;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.875rem;
+        }
+
+        .checkbox-label {
+            font-size: 1rem;
+            color: #374151;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* Input Styles */
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #c084fc;
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .input, .textarea {
+            width: 100%;
+            padding: 1.75rem 1.25rem 1.75rem 3.5rem;
+            font-size: 1.125rem;
+            border: 2px solid #e9d5ff;
+            border-radius: 1rem;
+            background: rgba(196, 181, 253, 0.1);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .textarea {
+            padding: 1.25rem;
+            min-height: 9rem;
+            resize: vertical;
+        }
+
+        .input:focus, .textarea:focus {
+            border-color: #9333ea;
+            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+        }
+
+        .input::placeholder, .textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 1.75rem 2.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #9333ea, #ec4899);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #7c3aed, #db2777);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: scale(1.05);
+        }
+
+        .btn-bulk {
+            background: linear-gradient(90deg, #f97316, #ec4899);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-bulk:hover {
+            background: linear-gradient(90deg, #ea580c, #db2777);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: scale(1.05);
+        }
+
+        .btn-download-all {
+            background: linear-gradient(90deg, #10b981, #06b6d4);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-download-all:hover {
+            background: linear-gradient(90deg, #059669, #0891b2);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: scale(1.05);
+        }
+
+        /* Tip Box */
+        .tip-box {
+            background: linear-gradient(90deg, #dbeafe, #faf5ff);
+            border: 1px solid #e9d5ff;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        /* Alert */
+        .alert {
+            border: 1px solid #fcd34d;
+            background: linear-gradient(90deg, #fef3c7, #fed7aa);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert.show {
+            display: flex;
+        }
+
+        .alert-text {
+            color: #92400e;
+            font-size: 1rem;
+        }
+
+        /* Results Section */
+        .results {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-header h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, #059669, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-header p {
+            color: #6b7280;
+        }
+
+        .download-all-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Preview Cards Grid */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .preview-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .preview-card:hover {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(1.05);
+        }
+
+        .preview-image {
+            position: relative;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+        }
+
+        .preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-badge {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: linear-gradient(90deg, #9333ea, #ec4899);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0);
+            transition: background 0.3s ease;
+        }
+
+        .preview-card:hover .preview-overlay {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-content {
+            padding: 1.25rem;
+        }
+
+        .preview-title {
+            font-size: 0.875rem;
+            color: #374151;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .btn-download {
+            width: 100%;
+            background: linear-gradient(90deg, #9333ea, #ec4899);
+            color: white;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-download:hover {
+            background: linear-gradient(90deg, #7c3aed, #db2777);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            width: 100%;
+            padding: 3rem 0;
+            margin-top: 5rem;
+            background: linear-gradient(90deg, #111827, #581c87, #111827);
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+        }
+
+        .footer p:last-child {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+        }
+
+        /* Icons */
+        .icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: currentColor;
+        }
+
+        .icon-sm {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        /* Hidden utility */
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-title h2 {
+                font-size: 1.5rem;
+            }
+            
+            .main-title p {
+                font-size: 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .preview-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>⚡ GrabInstagram</h1>
+            <p>Download Instagram content in seconds</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Main Input Area -->
+        <div class="main-title">
+            <h2>Download Any Instagram Content</h2>
+            <p>Save videos, reels, photos, and stories from Instagram with just one click. High quality, fast downloads, completely free.</p>
+        </div>
+
+        <div class="card">
+            <div class="form-section">
+                <!-- Bulk Download Toggle -->
+                <div class="bulk-toggle">
+                    <div class="checkbox" id="bulkCheckbox" onclick="toggleBulkMode()"></div>
+                    <label for="bulkCheckbox" class="checkbox-label" onclick="toggleBulkMode()">
+                        🚀 Enable Bulk Download
+                    </label>
+                </div>
+
+                <!-- Single URL Input -->
+                <div id="singleMode" class="input-section">
+                    <div class="input-group">
+                        <svg class="input-icon icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.53 1.53"></path>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.53-1.53"></path>
+                        </svg>
+                        <input type="url" id="urlInput" class="input" placeholder="https://www.instagram.com/p/example..." />
+                    </div>
+                    <button class="btn btn-primary" onclick="handleDownload()">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7,10 12,15 17,10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download Now
+                    </button>
+                </div>
+
+                <!-- Bulk URL Input -->
+                <div id="bulkMode" class="input-section hidden">
+                    <textarea id="bulkInput" class="textarea" placeholder="Paste multiple Instagram URLs here (one per line)...
+https://www.instagram.com/p/example1/
+https://www.instagram.com/p/example2/"></textarea>
+                    <button class="btn btn-bulk" onclick="handleDownload()">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7,10 12,15 17,10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Process All Links
+                    </button>
+                </div>
+
+                <!-- Tip Box -->
+                <div class="tip-box">
+                    <p>💡 <strong>Tip:</strong> Supports all Instagram content - Photos, Videos, Reels, Stories, and IGTV</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ad Notice -->
+        <div id="adNotice" class="alert">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <div class="alert-text">
+                🎬 <strong>Premium Quality Available!</strong> For FHD (Full HD) downloads, please view a short ad first.
+            </div>
+        </div>
+
+        <!-- Results Area -->
+        <div id="results" class="results">
+            <div class="results-header">
+                <h2>✅ Content Ready for Download!</h2>
+                <p>Your Instagram content has been processed and is ready to download</p>
+            </div>
+
+            <div id="downloadAllSection" class="download-all-section hidden">
+                <button class="btn btn-download-all" onclick="downloadAll()">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7,10 12,15 17,10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download All (<span id="itemCount">1</span> items)
+                </button>
+            </div>
+
+            <div id="previewGrid" class="preview-grid">
+                <!-- Preview cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>📱 For personal use only. Not affiliated with Instagram.</p>
+                <p>Made with ❤️ for the Instagram community</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Application State
+        let isBulkMode = false;
+        let showResults = false;
+        let showAdNotice = false;
+
+        // Mock data for preview cards
+        const mockResults = [
+            {
+                type: 'image',
+                thumbnail: 'https://images.unsplash.com/photo-1745398243027-5ac527601f75?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbnN0YWdyYW0lMjBzb2NpYWwlMjBtZWRpYSUyMHBob25lfGVufDF8fHx8MTc1ODUyNzA3NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+                url: 'https://example.com/image1',
+                title: 'Beautiful sunset over the mountains'
+            },
+            {
+                type: 'video',
+                thumbnail: 'https://images.unsplash.com/photo-1582298473456-9f4de0655b6f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2ZmZWUlMjBsaWZlc3R5bGUlMjB2aWRlb3xlbnwxfHx8fDE3NTg1MjcwNzl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+                url: 'https://example.com/video1',
+                title: 'Morning coffee routine'
+            },
+            {
+                type: 'reel',
+                thumbnail: 'https://images.unsplash.com/photo-1656153303280-c761ff69f67a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuYXR1cmUlMjBsYW5kc2NhcGUlMjBwaG90b3xlbnwxfHx8fDE3NTg1MjcwNzd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+                url: 'https://example.com/reel1',
+                title: 'Nature photography tips'
+            }
+        ];
+
+        // Toggle bulk mode
+        function toggleBulkMode() {
+            isBulkMode = !isBulkMode;
+            const checkbox = document.getElementById('bulkCheckbox');
+            const singleMode = document.getElementById('singleMode');
+            const bulkMode = document.getElementById('bulkMode');
+
+            if (isBulkMode) {
+                checkbox.classList.add('checked');
+                singleMode.classList.add('hidden');
+                bulkMode.classList.remove('hidden');
+            } else {
+                checkbox.classList.remove('checked');
+                singleMode.classList.remove('hidden');
+                bulkMode.classList.add('hidden');
+            }
+        }
+
+        // Handle download button click
+        function handleDownload() {
+            const urlInput = document.getElementById('urlInput').value;
+            const bulkInput = document.getElementById('bulkInput').value;
+
+            if ((!isBulkMode && !urlInput.trim()) || (isBulkMode && !bulkInput.trim())) {
+                alert('Please enter a valid Instagram URL');
+                return;
+            }
+
+            showAdNotice = true;
+            showResults = true;
+
+            // Show ad notice
+            const adNotice = document.getElementById('adNotice');
+            adNotice.classList.add('show');
+
+            // Show results
+            const results = document.getElementById('results');
+            results.classList.add('show');
+
+            // Show download all button for bulk mode
+            const downloadAllSection = document.getElementById('downloadAllSection');
+            const itemCount = document.getElementById('itemCount');
+            
+            if (isBulkMode) {
+                downloadAllSection.classList.remove('hidden');
+                itemCount.textContent = mockResults.length;
+            } else {
+                downloadAllSection.classList.add('hidden');
+            }
+
+            // Generate preview cards
+            generatePreviewCards();
+
+            // Scroll to results
+            results.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Generate preview cards
+        function generatePreviewCards() {
+            const previewGrid = document.getElementById('previewGrid');
+            const items = isBulkMode ? mockResults : mockResults.slice(0, 1);
+
+            previewGrid.innerHTML = items.map((item, index) => {
+                const icon = getIcon(item.type);
+                const typeLabel = getTypeLabel(item.type);
+
+                return `
+                    <div class="preview-card">
+                        <div class="preview-image">
+                            <img src="${item.thumbnail}" alt="${item.title || `Instagram ${item.type}`}" />
+                            <div class="preview-badge">
+                                ${icon}
+                                ${typeLabel}
+                            </div>
+                            <div class="preview-overlay"></div>
+                        </div>
+                        <div class="preview-content">
+                            ${item.title ? `<p class="preview-title">${item.title}</p>` : ''}
+                            <button class="btn-download" onclick="downloadItem('${item.url}', '${item.type}')">
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7,10 12,15 17,10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Download ${typeLabel}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Get icon for content type
+        function getIcon(type) {
+            switch (type) {
+                case 'video':
+                    return `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                    </svg>`;
+                case 'reel':
+                    return `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>`;
+                default:
+                    return `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="9" cy="9" r="2"></circle>
+                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                    </svg>`;
+            }
+        }
+
+        // Get type label
+        function getTypeLabel(type) {
+            switch (type) {
+                case 'video':
+                    return 'Video';
+                case 'reel':
+                    return 'Reel';
+                default:
+                    return 'Image';
+            }
+        }
+
+        // Download individual item
+        function downloadItem(url, type) {
+            console.log(`Downloading ${type} from:`, url);
+            alert(`Downloading ${type}... (This is a demo)`);
+        }
+
+        // Download all items
+        function downloadAll() {
+            console.log('Downloading all items...');
+            alert('Downloading all items... (This is a demo)');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('GrabInstagram loaded successfully!');
+        });
+    </script>
+</body>
+</html>
