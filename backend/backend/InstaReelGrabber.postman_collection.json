@@ -1,0 +1,58 @@
+{
+        "info":{
+            "name": "InstaReelGrabber",
+            "_postman_id": "abcd1234-5678-90ef-ghij-klmnopqrstuv",
+            "description": "Collection for testing InstaReelGrabber API",
+            "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" 
+    },
+    "item": [
+        {
+            "name": "Test Server",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:5000/",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "port": "5000",
+                    "path": [""]
+                }
+            }
+        },
+        {
+            "name": "Download Media",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n     \"url\": \"https://www.instagram.com/p/example/\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:5000/api/download",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "port": "5000",
+                    "path": ["api", "download"]
+                }
+            }
+        },
+        {
+            "name": "GET History",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:5000/api/download/history",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "port": "5000",
+                    "path": ["api", "download", "history"]
+                }
+            }
+        }
+    ]
+}
