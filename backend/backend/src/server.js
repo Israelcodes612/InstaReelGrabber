@@ -14,7 +14,7 @@ app.use(express.json())
 
 
 // Connect to MongoDB
-connectDB
+connectDB()
 
 
 // Routes
